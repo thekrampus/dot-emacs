@@ -3,6 +3,7 @@ ac-comphist.dat
 tramp
 url
 auto-save-list
+srecode-map.el
 
 # emacs.gitignore
 # -*- mode: gitignore; -*-
