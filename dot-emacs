@@ -1,7 +1,7 @@
 ;;;; .emacs
 ;;;; by Rob Kelly <tetramor.ph>
 ;; (This is git-controlled in the .emacs.d directory.)
-;; (Don't forget to `ln -s ~/.emacs ~/.emacs.d/dot-emacs`)
+;; (Don't forget to `ln -s ~/.emacs.d/dot-emacs ~/.emacs`)
 
 ;;;; Package management configuration:
 ;; {{{
@@ -149,7 +149,7 @@
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message
       (with-temp-buffer
-        (insert-file-contents "~/.emacs.d/logos/starman-ansishadow")
+        (insert-file-contents "~/.emacs.d/logos/default")
         (buffer-string)))
 
 ;; }}}
