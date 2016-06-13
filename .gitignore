@@ -4,6 +4,7 @@ tramp
 url
 auto-save-list
 srecode-map.el
+.python-environments
 
 # emacs.gitignore
 # -*- mode: gitignore; -*-
