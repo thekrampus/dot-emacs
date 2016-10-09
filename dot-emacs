@@ -40,13 +40,13 @@
 
 ;; Load IDO (Interactively Do Things)
 (require 'ido)
-(ido-mode t)
+;; (ido-mode t)
 
 ;; Load tree edit mode
 (require 'tree-edit-mode)
 
 ;; auto-complete configuration
-(ac-config-default)
+;; (ac-config-default)
 (setq
  ac-auto-start 2
  ac-override-local-map nil
