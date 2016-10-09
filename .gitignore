@@ -5,6 +5,7 @@ url
 auto-save-list
 srecode-map.el
 .python-environments
+ido.last
 
 # emacs.gitignore
 # -*- mode: gitignore; -*-
