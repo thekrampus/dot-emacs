@@ -2,6 +2,8 @@
 ;;;; by Rob Kelly <tetramor.ph>
 ;; (This is git-controlled in the .emacs.d directory.)
 ;; (Don't forget to `ln -s ~/.emacs.d/dot-emacs ~/.emacs`)
+;; Note that this is the LIGHT revision
+;; This does not configure major modes
 
 ;;;; Package management configuration:
 ;; {{{
@@ -64,75 +66,75 @@
 (add-hook 'help-mode-hook 'form-feed-mode)
 
 ;;; Processing mode
-(add-to-list 'load-path "~/.emacs.d/processing-emacs/")
-(autoload 'processing-mode "processing-mode" "Processing mode" t)
-(add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
-(setq processing-location "/usr/bin/processing-java")
+;; (add-to-list 'load-path "~/.emacs.d/processing-emacs/")
+;; (autoload 'processing-mode "processing-mode" "Processing mode" t)
+;; (add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
+;; (setq processing-location "/usr/bin/processing-java")
 
 ;;; ASM mode
-(defun nasm-compile ()
-  "Compile with nasm, default args"
-  (interactive)
-  (shell-command-on-region
-   ;; Beginning and end of buffer
-   (point-min)
-   (point-max)
-   ;; Command and parameters
-   (format "nasm %s" (file-name-nondirectory buffer-file-name))
-   ;; Get or create output buffer
-   (generate-new-buffer "NASM")
-   ;; Do not replace current buffer
-   nil
-   ;; Error buffer
-   "##NASM Error Buffer##"
-   ;; Show error buffer
-   t ))
-
-(add-hook 'asm-mode-hook
-  (lambda ()
-    (local-set-key (kbd "C-c C-c") 'nasm-compile)))
+;; (defun nasm-compile ()
+;;   "Compile with nasm, default args"
+;;   (interactive)
+;;   (shell-command-on-region
+;;    ;; Beginning and end of buffer
+;;    (point-min)
+;;    (point-max)
+;;    ;; Command and parameters
+;;    (format "nasm %s" (file-name-nondirectory buffer-file-name))
+;;    ;; Get or create output buffer
+;;    (generate-new-buffer "NASM")
+;;    ;; Do not replace current buffer
+;;    nil
+;;    ;; Error buffer
+;;    "##NASM Error Buffer##"
+;;    ;; Show error buffer
+;;    t ))
+;;
+;; (add-hook 'asm-mode-hook
+;;   (lambda ()
+;;     (local-set-key (kbd "C-c C-c") 'nasm-compile)))
 
 ;;; AUCTeX mode
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
+;; (load "auctex.el" nil t t)
+;; (load "preview-latex.el" nil t t)
+;; (setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
+;; (setq TeX-save-query nil)
+;; (setq TeX-PDF-mode t)
 
-;; LaTeX hooks (not AUCTeX specific)
-(defun turn-on-outline-minor-mode ()
-  (outline-minor-mode 1))
-(add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
-(add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
-(setq outline-minor-mode-prefix "\C-c\C-w") 
+;; ;; LaTeX hooks (not AUCTeX specific)
+;; (defun turn-on-outline-minor-mode ()
+;;   (outline-minor-mode 1))
+;; (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
+;; (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
+;; (setq outline-minor-mode-prefix "\C-c\C-w") 
 
 ;;; ARFF mode
-(require 'arff)
+;; (require 'arff)
 
 ;;; C mode
-(add-hook 'c-mode-common-hook '(lambda () (c-set-offset 'case-label '+)))
-(add-hook 'c-mode-common-hook '(lambda () (column-enforce-mode 1)))
+;; (add-hook 'c-mode-common-hook '(lambda () (c-set-offset 'case-label '+)))
+;; (add-hook 'c-mode-common-hook '(lambda () (column-enforce-mode 1)))
 ;; Load CC (C & C++) mode
-(require 'cc-mode)
-(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+;; (require 'cc-mode)
+;; (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 
 ;;; SQL mode
-(require 'sql-indent)
-(add-hook 'sql-mode-hook '(lambda () (column-enforce-mode 1)))
+;; (require 'sql-indent)
+;; (add-hook 'sql-mode-hook '(lambda () (column-enforce-mode 1)))
 
 ;;; Python mode
-(add-hook 'python-mode-hook '(lambda () (column-enforce-mode 1)))
-;; (add-hook 'python-mode-hook '(lambda () (eldoc-mode 1)))
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
-;; ipython setup
-(setq-default python-shell-interpreter "ipython")
-(setq-default python-shell-interpreter-args "-i")
+;; (add-hook 'python-mode-hook '(lambda () (column-enforce-mode 1)))
+;; ;; (add-hook 'python-mode-hook '(lambda () (eldoc-mode 1)))
+;; (add-hook 'python-mode-hook 'jedi:setup)
+;; (setq jedi:complete-on-dot t)
+;; ;; ipython setup
+;; (setq-default python-shell-interpreter "ipython")
+;; (setq-default python-shell-interpreter-args "-i")
 
 ;;; ESS mode (R & others)
-(setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
-(require 'ess-site)
+;; (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
+;; (require 'ess-site)
 ;; }}}
 
 ;;;; Miscellaneous configuration:
@@ -170,52 +172,52 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(LaTeX-item-indent 0)
- '(TeX-command-list
-   (quote
-    (("TeX" "%(PDF)%(tex) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (plain-tex-mode texinfo-mode ams-tex-mode)
-      :help "Run plain TeX")
-     ("LaTeX" "%`%l%(mode) -shell-escape%' %t" TeX-run-TeX nil
-      (latex-mode doctex-mode)
-      :help "Run LaTeX")
-     ("Makeinfo" "makeinfo %(extraopts) %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with Info output")
-     ("Makeinfo HTML" "makeinfo %(extraopts) --html %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with HTML output")
-     ("AmSTeX" "%(PDF)amstex %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (ams-tex-mode)
-      :help "Run AMSTeX")
-     ("ConTeXt" "texexec --once --texutil %(extraopts) %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt once")
-     ("ConTeXt Full" "texexec %(extraopts) %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt until completion")
-     ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
-     ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
-     ;; ("LoadView" "xpdf -remote %s %s.pdf" TeX-run-discard-or-function t t :help "Load Viewer")
-     ;; ("View" "xpdf -remote %s -reload" TeX-run-discard-or-function t t :help "Run Viewer")
-     ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
-     ("Print" "%p" TeX-run-command t t :help "Print the file")
-     ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
-     ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
-     ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
-     ("Xindy" "texindy %s" TeX-run-command nil t :help "Run xindy to create index file")
-     ("Check" "lacheck %s" TeX-run-compile nil
-      (latex-mode)
-      :help "Check LaTeX file for correctness")
-     ("ChkTeX" "chktex -v6 %s" TeX-run-compile nil
-      (latex-mode)
-      :help "Check LaTeX file for common mistakes")
-     ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
-     ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
-     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-     ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
- '(gud-gdb-command-name "gdb --annotate=1")
- '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
+ ;; '(LaTeX-item-indent 0)
+ ;; '(TeX-command-list
+ ;;   (quote
+ ;;    (("TeX" "%(PDF)%(tex) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+ ;;      (plain-tex-mode texinfo-mode ams-tex-mode)
+ ;;      :help "Run plain TeX")
+ ;;     ("LaTeX" "%`%l%(mode) -shell-escape%' %t" TeX-run-TeX nil
+ ;;      (latex-mode doctex-mode)
+ ;;      :help "Run LaTeX")
+ ;;     ("Makeinfo" "makeinfo %(extraopts) %t" TeX-run-compile nil
+ ;;      (texinfo-mode)
+ ;;      :help "Run Makeinfo with Info output")
+ ;;     ("Makeinfo HTML" "makeinfo %(extraopts) --html %t" TeX-run-compile nil
+ ;;      (texinfo-mode)
+ ;;      :help "Run Makeinfo with HTML output")
+ ;;     ("AmSTeX" "%(PDF)amstex %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+ ;;      (ams-tex-mode)
+ ;;      :help "Run AMSTeX")
+ ;;     ("ConTeXt" "texexec --once --texutil %(extraopts) %(execopts)%t" TeX-run-TeX nil
+ ;;      (context-mode)
+ ;;      :help "Run ConTeXt once")
+ ;;     ("ConTeXt Full" "texexec %(extraopts) %(execopts)%t" TeX-run-TeX nil
+ ;;      (context-mode)
+ ;;      :help "Run ConTeXt until completion")
+ ;;     ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
+ ;;     ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
+ ;;     ;; ("LoadView" "xpdf -remote %s %s.pdf" TeX-run-discard-or-function t t :help "Load Viewer")
+ ;;     ;; ("View" "xpdf -remote %s -reload" TeX-run-discard-or-function t t :help "Run Viewer")
+ ;;     ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
+ ;;     ("Print" "%p" TeX-run-command t t :help "Print the file")
+ ;;     ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
+ ;;     ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
+ ;;     ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
+ ;;     ("Xindy" "texindy %s" TeX-run-command nil t :help "Run xindy to create index file")
+ ;;     ("Check" "lacheck %s" TeX-run-compile nil
+ ;;      (latex-mode)
+ ;;      :help "Check LaTeX file for correctness")
+ ;;     ("ChkTeX" "chktex -v6 %s" TeX-run-compile nil
+ ;;      (latex-mode)
+ ;;      :help "Check LaTeX file for common mistakes")
+ ;;     ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
+ ;;     ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
+ ;;     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
+ ;;     ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
+ ;; '(gud-gdb-command-name "gdb --annotate=1")
+ ;; '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(safe-local-variable-values
    (quote
