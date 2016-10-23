@@ -135,7 +135,7 @@
 (require 'ess-site)
 
 ;;; Go language mode
-(defun go-mode-hook-definition()
+(defun go-mode-hook-definition ()
   (column-enforce-mode 1)
   (auto-complete-mode 1)
   (add-hook 'before-save-hook 'gofmt-before-save)
@@ -143,7 +143,8 @@
       (set (make-local-variable 'compile-command)
            "go build -v; and go test -v; and go vet"))
   (local-set-key (kbd "M-.") 'godef-jump)
-  (local-set-key (kbd "C-c C-c") 'compile))
+  (local-set-key (kbd "C-c C-c") 'compile)
+  (local-set-key (kbd "M-RET") 'go-run))
 (add-hook 'go-mode-hook 'go-mode-hook-definition)
 (with-eval-after-load 'go-mode
   (require 'go-autocomplete)
@@ -233,7 +234,7 @@
  '(large-file-warning-threshold nil)
  '(package-selected-packages
    (quote
-    (go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
+    (go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
