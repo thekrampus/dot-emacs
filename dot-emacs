@@ -10,7 +10,7 @@
 
 ;; package manager initialization
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                          ;; ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
@@ -62,6 +62,14 @@
 
 ;;; Emacs Help mode
 (add-hook 'help-mode-hook 'form-feed-mode)
+
+;;; Flycheck mode
+(defun flycheck-mode-hook-definition ()
+  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-keymap-prefix (kbd "M-f"))
+  (define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map))
+(add-hook 'flycheck-mode-hook 'flycheck-mode-hook-definition)
+(add-hook 'after-init-hook 'global-flycheck-mode)
 
 ;;; Processing mode
 (add-to-list 'load-path "~/.emacs.d/processing-emacs/")
@@ -150,6 +158,29 @@
   (require 'go-autocomplete)
   (require 'go-guru))
 
+;;; Rust mode
+(defun rust-run-buffer ()
+  (interactive)
+  (let ((fname (file-name-nondirectory buffer-file-name)))
+    (compile (concat "rustc -v -o /tmp/rustbin "
+                     fname
+                     "; and /tmp/rustbin"))))
+    ;; (compile (concat "rustc -v -o /tmp/rustbin " fname))
+    ;; (shell-command "/tmp/rustbin"
+    ;;                (generate-new-buffer (concat "Rust: running " fname))
+    ;;                nil)))
+(defun rust-mode-hook-definition()
+  (column-enforce-mode 1)
+  (auto-complete-mode 1)
+  (rust-enable-format-on-save)
+  (if (not (string-match "rustc" compile-command))
+      (set (make-local-variable 'compile-command)
+           (concat "rustc -v " (file-name-nondirectory buffer-file-name))))
+  (local-set-key (kbd "C-c C-c") 'compile)
+  (local-set-key (kbd "M-RET") 'rust-run-buffer))
+(add-hook 'rust-mode-hook 'rust-mode-hook-definition)
+(add-hook 'flycheck-mode-hook 'flycheck-rust-setup)
+
 ;; }}}
 
 ;;;; Miscellaneous configuration:
@@ -234,7 +265,7 @@
  '(large-file-warning-threshold nil)
  '(package-selected-packages
    (quote
-    (go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
+    (cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
