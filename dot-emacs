@@ -133,6 +133,22 @@
 ;;; ESS mode (R & others)
 (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
 (require 'ess-site)
+
+;;; Go language mode
+(defun go-mode-hook-definition()
+  (column-enforce-mode 1)
+  (auto-complete-mode 1)
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v; and go test -v; and go vet"))
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (local-set-key (kbd "C-c C-c") 'compile))
+(add-hook 'go-mode-hook 'go-mode-hook-definition)
+(with-eval-after-load 'go-mode
+  (require 'go-autocomplete)
+  (require 'go-guru))
+
 ;; }}}
 
 ;;;; Miscellaneous configuration:
@@ -196,8 +212,6 @@
       :help "Run ConTeXt until completion")
      ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
      ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
-     ;; ("LoadView" "xpdf -remote %s %s.pdf" TeX-run-discard-or-function t t :help "Load Viewer")
-     ;; ("View" "xpdf -remote %s -reload" TeX-run-discard-or-function t t :help "Run Viewer")
      ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
      ("Print" "%p" TeX-run-command t t :help "Print the file")
      ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
@@ -217,6 +231,9 @@
  '(gud-gdb-command-name "gdb --annotate=1")
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
+ '(package-selected-packages
+   (quote
+    (go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
@@ -226,8 +243,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;; '(font-lock-comment-face ((((class color) (min-colors 88) (background light)) (:foreground "Pink"))))
- ;; '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "cyan"))))
  )
 
 ;; }}}
