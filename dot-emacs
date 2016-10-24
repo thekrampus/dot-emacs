@@ -185,7 +185,6 @@
 
 ;;; nXML mode
 (defun nxml-mode-hook-definition ()
-  (column-enforce-mode 1)
   (auto-complete-mode 1)
   (local-set-key (kbd "M-{") 'nxml-backward-element)
   (local-set-key (kbd "M-}") 'nxml-forward-element)
