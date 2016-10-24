@@ -162,9 +162,7 @@
 (defun rust-run-buffer ()
   (interactive)
   (let ((fname (file-name-nondirectory buffer-file-name)))
-    (compile (concat "rustc -v -o /tmp/rustbin "
-                     fname
-                     "; and /tmp/rustbin"))))
+    (compile "cargo run -v")))
     ;; (compile (concat "rustc -v -o /tmp/rustbin " fname))
     ;; (shell-command "/tmp/rustbin"
     ;;                (generate-new-buffer (concat "Rust: running " fname))
@@ -173,9 +171,9 @@
   (column-enforce-mode 1)
   (auto-complete-mode 1)
   (rust-enable-format-on-save)
-  (if (not (string-match "rustc" compile-command))
+  (if (not (string-match "cargo" compile-command))
       (set (make-local-variable 'compile-command)
-           (concat "rustc -v " (file-name-nondirectory buffer-file-name))))
+           (concat "cargo build -v" (file-name-nondirectory buffer-file-name))))
   (local-set-key (kbd "C-c C-c") 'compile)
   (local-set-key (kbd "M-RET") 'rust-run-buffer))
 (add-hook 'rust-mode-hook 'rust-mode-hook-definition)
