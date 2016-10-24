@@ -1,7 +1,10 @@
-;;;; .emacs
+;;;; .emacs --- Configuration for Emacs
 ;;;; by Rob Kelly <tetramor.ph>
+;;; Commentary:
 ;; (This is git-controlled in the .emacs.d directory.)
 ;; (Don't forget to `ln -s ~/.emacs.d/dot-emacs ~/.emacs`)
+
+;;; Code:
 
 ;;;; Package management configuration:
 ;; {{{
@@ -167,10 +170,11 @@
     ;; (shell-command "/tmp/rustbin"
     ;;                (generate-new-buffer (concat "Rust: running " fname))
     ;;                nil)))
-(defun rust-mode-hook-definition()
+(defun rust-mode-hook-definition ()
   (column-enforce-mode 1)
   (auto-complete-mode 1)
   (rust-enable-format-on-save)
+  (racer-mode)
   (if (not (string-match "cargo" compile-command))
       (set (make-local-variable 'compile-command)
            (concat "cargo build -v" (file-name-nondirectory buffer-file-name))))
@@ -179,6 +183,15 @@
 (add-hook 'rust-mode-hook 'rust-mode-hook-definition)
 (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)
 
+;;; nXML mode
+(defun nxml-mode-hook-definition ()
+  (column-enforce-mode 1)
+  (auto-complete-mode 1)
+  (local-set-key (kbd "M-{") 'nxml-backward-element)
+  (local-set-key (kbd "M-}") 'nxml-forward-element)
+  (local-set-key (kbd "M-_") 'nxml-backward-up-element)
+  (local-set-key (kbd "M-+") 'nxml-down-element))
+(add-hook 'nxml-mode-hook 'nxml-mode-hook-definition)
 ;; }}}
 
 ;;;; Miscellaneous configuration:
@@ -261,9 +274,10 @@
  '(gud-gdb-command-name "gdb --annotate=1")
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
+ '(nxml-slash-auto-complete-flag t)
  '(package-selected-packages
    (quote
-    (cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
+    (ac-emoji ac-racer racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
