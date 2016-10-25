@@ -17,6 +17,15 @@
                          ;; ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
+
+(defun install-base-packages ()
+  "Install all packages marked selected by Custom. These are updated automatically by Emacs 25"
+  (interactive)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (dolist (package package-selected-packages)
+    (unless (package-installed-p package)
+      (package-install package))))
 ;; }}}
 
 ;;;; Load and configure packages (non-managed):
