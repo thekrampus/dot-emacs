@@ -6,6 +6,7 @@
 ;;;; Package management configuration:
 ;; {{{
 (add-to-list 'load-path "~/.emacs.d/elisp")
+(package-initialize)
 
 ;; package manager initialization
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -21,7 +22,7 @@
 ;; Remote file editing through scp
 ;; Oh my god did you even know you could do this?
 (require 'tramp)
-(setq tramp-default-method "scp")
+(setq tramp-default-method "ssh")
 (set-default 'tramp-default-proxies-alist (quote ((".*" "\\ `root\\'" "/ssh:%h"))))
 
 ;; Load autopair
@@ -40,10 +41,12 @@
 
 ;; Load IDO (Interactively Do Things)
 (require 'ido)
-(ido-mode t)
+;; (ido-mode t)
 
 ;; Load tree edit mode
 (require 'tree-edit-mode)
+
+(ac-config-default)
 
 ;; }}}
 
@@ -80,8 +83,8 @@
     (local-set-key (kbd "C-c C-c") 'nasm-compile)))
 
 ;;; AUCTeX mode
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;; (load "auctex.el" nil t t)
+;; (load "preview-latex.el" nil t t)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
@@ -110,8 +113,8 @@
 
 ;;; Python mode
 (add-hook 'python-mode-hook '(lambda () (column-enforce-mode 1)))
-(add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook 'auto-complete-mode)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq-default jedi:complete-on-dot t)
 ;; bpython setup
 (setq-default py-shell-name "bpython")
 (setq-default py-which-bufname "bpython")
@@ -121,8 +124,8 @@
 (setq py-smart-indentation t)
 
 ;;; ESS mode (R & others)
-(setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
-(require 'ess-site)
+;; (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
+;; (require 'ess-site)
 
 ;; }}}
 
