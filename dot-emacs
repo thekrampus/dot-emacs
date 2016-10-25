@@ -1,7 +1,10 @@
-;;;; .emacs
+;;;; .emacs --- Configuration for Emacs
 ;;;; by Rob Kelly <tetramor.ph>
+;;; Commentary:
 ;; (This is git-controlled in the .emacs.d directory.)
 ;; (Don't forget to `ln -s ~/.emacs.d/dot-emacs ~/.emacs`)
+
+;;; Code:
 
 ;;;; Package management configuration:
 ;; {{{
@@ -10,7 +13,7 @@
 
 ;; package manager initialization
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                          ;; ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
@@ -20,7 +23,6 @@
 ;; {{{
 
 ;; Remote file editing through scp
-;; Oh my god did you even know you could do this?
 (require 'tramp)
 (setq tramp-default-method "ssh")
 (set-default 'tramp-default-proxies-alist (quote ((".*" "\\ `root\\'" "/ssh:%h"))))
@@ -46,12 +48,31 @@
 ;; Load tree edit mode
 (require 'tree-edit-mode)
 
-(ac-config-default)
+;; auto-complete configuration
+;; (ac-config-default)
+(setq
+ ac-auto-start 2
+ ac-override-local-map nil
+ ac-use-menu-map t
+ ac-candidate-limit 20
+ ac-auto-show-menu 0.3
+ ac-delay 0.05)
 
 ;; }}}
 
 ;;;; Major mode hooks & configuration:
 ;; {{{
+
+;;; Emacs Help mode
+(add-hook 'help-mode-hook 'form-feed-mode)
+
+;;; Flycheck mode
+(defun flycheck-mode-hook-definition ()
+  (define-key flycheck-mode-map flycheck-keymap-prefix nil)
+  (setq flycheck-keymap-prefix (kbd "M-f"))
+  (define-key flycheck-mode-map flycheck-keymap-prefix flycheck-command-map))
+(add-hook 'flycheck-mode-hook 'flycheck-mode-hook-definition)
+(add-hook 'after-init-hook 'global-flycheck-mode)
 
 ;;; Processing mode
 (add-to-list 'load-path "~/.emacs.d/processing-emacs/")
@@ -95,7 +116,7 @@
   (outline-minor-mode 1))
 (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
 (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
-(setq outline-minor-mode-prefix "\C-c\C-w") 
+(setq outline-minor-mode-prefix "\C-c\C-w")
 
 ;;; ARFF mode
 (require 'arff)
@@ -113,20 +134,63 @@
 
 ;;; Python mode
 (add-hook 'python-mode-hook '(lambda () (column-enforce-mode 1)))
+;; (add-hook 'python-mode-hook '(lambda () (eldoc-mode 1)))
 (add-hook 'python-mode-hook 'jedi:setup)
-(setq-default jedi:complete-on-dot t)
-;; bpython setup
-(setq-default py-shell-name "bpython")
-(setq-default py-which-bufname "bpython")
-(setq py-force-py-shell-name-p t)
-(setq py-shell-switch-buffers-on-execute-p t)
-(setq py-switch-buffers-on-execute-p t)
-(setq py-smart-indentation t)
+(setq jedi:complete-on-dot t)
+;; ipython setup
+(setq-default python-shell-interpreter "ipython")
+(setq-default python-shell-interpreter-args "-i")
 
 ;;; ESS mode (R & others)
 ;; (setq load-path (cons "/usr/share/emacs/site-lisp/ess" load-path))
 ;; (require 'ess-site)
 
+;;; Go language mode
+(defun go-mode-hook-definition ()
+  (column-enforce-mode 1)
+  (auto-complete-mode 1)
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v; and go test -v; and go vet"))
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (local-set-key (kbd "C-c C-c") 'compile)
+  (local-set-key (kbd "M-RET") 'go-run))
+(add-hook 'go-mode-hook 'go-mode-hook-definition)
+(with-eval-after-load 'go-mode
+  (require 'go-autocomplete)
+  (require 'go-guru))
+
+;;; Rust mode
+(defun rust-run-buffer ()
+  (interactive)
+  (let ((fname (file-name-nondirectory buffer-file-name)))
+    (compile "cargo run -v")))
+    ;; (compile (concat "rustc -v -o /tmp/rustbin " fname))
+    ;; (shell-command "/tmp/rustbin"
+    ;;                (generate-new-buffer (concat "Rust: running " fname))
+    ;;                nil)))
+(defun rust-mode-hook-definition ()
+  (column-enforce-mode 1)
+  (auto-complete-mode 1)
+  (rust-enable-format-on-save)
+  (racer-mode)
+  (if (not (string-match "cargo" compile-command))
+      (set (make-local-variable 'compile-command)
+           (concat "cargo build -v" (file-name-nondirectory buffer-file-name))))
+  (local-set-key (kbd "C-c C-c") 'compile)
+  (local-set-key (kbd "M-RET") 'rust-run-buffer))
+(add-hook 'rust-mode-hook 'rust-mode-hook-definition)
+(add-hook 'flycheck-mode-hook 'flycheck-rust-setup)
+
+;;; nXML mode
+(defun nxml-mode-hook-definition ()
+  (auto-complete-mode 1)
+  (local-set-key (kbd "M-{") 'nxml-backward-element)
+  (local-set-key (kbd "M-}") 'nxml-forward-element)
+  (local-set-key (kbd "M-_") 'nxml-backward-up-element)
+  (local-set-key (kbd "M-+") 'nxml-down-element))
+(add-hook 'nxml-mode-hook 'nxml-mode-hook-definition)
 ;; }}}
 
 ;;;; Miscellaneous configuration:
@@ -136,6 +200,8 @@
 (global-set-key (kbd "C-g") 'goto-line)
 (global-set-key (kbd "C-f") 'dabbrev-expand)
 (global-set-key (kbd "M-/") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-x <C-left>") 'previous-multiframe-window)
+(global-set-key (kbd "C-x <C-right>") 'next-multiframe-window)
 
 ;; Just emacs things (dot tumblr dot com)
 (setq-default column-number-mode t)
@@ -154,6 +220,10 @@
       (with-temp-buffer
         (insert-file-contents "~/.emacs.d/logos/default")
         (buffer-string)))
+
+;; before-save-hook -- delete trailing whitespace automatically
+(add-hook 'before-save-hook (lambda ()
+                              (delete-trailing-whitespace)))
 
 ;; }}}
 
@@ -190,8 +260,6 @@
       :help "Run ConTeXt until completion")
      ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
      ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
-     ;; ("LoadView" "xpdf -remote %s %s.pdf" TeX-run-discard-or-function t t :help "Load Viewer")
-     ;; ("View" "xpdf -remote %s -reload" TeX-run-discard-or-function t t :help "Run Viewer")
      ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
      ("Print" "%p" TeX-run-command t t :help "Print the file")
      ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
@@ -211,6 +279,10 @@
  '(gud-gdb-command-name "gdb --annotate=1")
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
+ '(nxml-slash-auto-complete-flag t)
+ '(package-selected-packages
+   (quote
+    (ac-emoji ac-racer racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
@@ -220,7 +292,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-comment-face ((((class color) (min-colors 88) (background light)) (:foreground "Pink"))))
- '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "cyan")))))
+ )
 
 ;; }}}
