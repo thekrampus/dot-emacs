@@ -18,6 +18,7 @@
                          ("melpa" . "https://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
 
+
 (defun install-base-packages ()
   "Install all packages marked selected by Custom. These are updated automatically by Emacs 25"
   (interactive)
@@ -26,6 +27,40 @@
   (dolist (package package-selected-packages)
     (unless (package-installed-p package)
       (package-install package))))
+
+;;; Selected packages:
+(setq package-selected-packages
+      '(racer
+        cargo
+        flycheck-rust
+        flymake-rust
+        rust-mode
+        rustfmt
+        go-playground
+        go-guru
+        go-autocomplete
+        go-direx
+        go-mode
+        slime
+        pythonic
+        popup-complete
+        matlab-mode
+        lua-mode
+        jedi
+        ipython
+        haskell-mode
+        form-feed
+        fish-mode
+        eldoc-extension
+        eldoc-eval
+        column-enforce-mode
+        c-eldoc
+        auto-complete-auctex
+        ac-racer
+        ac-python
+        ac-octave
+        ac-math
+        ac-c-headers))
 ;; }}}
 
 ;;;; Load and configure packages (non-managed):
@@ -289,9 +324,6 @@
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(nxml-slash-auto-complete-flag t)
- '(package-selected-packages
-   (quote
-    (ac-emoji ac-racer racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
