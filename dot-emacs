@@ -118,6 +118,11 @@
 (add-hook 'flycheck-mode-hook 'flycheck-mode-hook-definition)
 (add-hook 'after-init-hook 'global-flycheck-mode)
 
+;;; Org mode
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+
 ;;; Processing mode
 (add-to-list 'load-path "~/.emacs.d/processing-emacs/")
 (autoload 'processing-mode "processing-mode" "Processing mode" t)
@@ -268,6 +273,10 @@
 ;; before-save-hook -- delete trailing whitespace automatically
 (add-hook 'before-save-hook (lambda ()
                               (delete-trailing-whitespace)))
+
+;; Should use chromium as default browser
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium")
 
 ;; }}}
 
