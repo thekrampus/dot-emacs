@@ -119,8 +119,21 @@
 (add-hook 'after-init-hook 'global-flycheck-mode)
 
 ;;; Org mode
+(add-hook 'org-mode-hook
+          #'(lambda () (autopair-mode -1)))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
+(setq org-agenda-files (list "~/org/mroi.org"
+                             "~/org/mroi.software.org"
+                             "~/org/home.org"))
+(setq org-file-apps
+      '((auto-mode . emacs)
+        ("\\.x?html?\\'" . "chromium %s")
+        ("\\.pptx?\\'" . "libreoffice %s")
+        ("\\.docx?\\'" . "libreoffice %s")
+        ("\\.pdf\\'" . "evince \"%s\"")
+        ("\\.pdf::\\([0-9]+\\)\\'" . "evince \"%s\" -p %1")))
+(setq org-hide-emphasis-markers t)
 (setq org-log-done t)
 
 ;;; Processing mode
@@ -333,6 +346,9 @@
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(nxml-slash-auto-complete-flag t)
+ '(org-agenda-files
+   (quote
+    ("~/org/mroi.software.org" "~/org/mroi.org" "~/org/home.org")))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
