@@ -216,24 +216,24 @@
 ;;; Rust mode
 (defun rust-run-buffer ()
   (interactive)
-  (let ((fname (file-name-nondirectory buffer-file-name)))
-    (compile "cargo run -v")))
-    ;; (compile (concat "rustc -v -o /tmp/rustbin " fname))
-    ;; (shell-command "/tmp/rustbin"
-    ;;                (generate-new-buffer (concat "Rust: running " fname))
-    ;;                nil)))
+  (compile "cargo run -v" t))
 (defun rust-mode-hook-definition ()
   (column-enforce-mode 1)
-  (auto-complete-mode 1)
+  (setq column-enforce-column 100)
+  ;; (auto-complete-mode 1)
   (rust-enable-format-on-save)
   (racer-mode)
+  (company-mode)
   (if (not (string-match "cargo" compile-command))
       (set (make-local-variable 'compile-command)
-           (concat "cargo build -v" (file-name-nondirectory buffer-file-name))))
+           "cargo build -v"))
   (local-set-key (kbd "C-c C-c") 'compile)
-  (local-set-key (kbd "M-RET") 'rust-run-buffer))
+  (local-set-key (kbd "M-RET") 'rust-run-buffer)
+  (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
+  (setq company-tooltip-align-annotations t))
 (add-hook 'rust-mode-hook 'rust-mode-hook-definition)
 (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)
+(add-hook 'racer-mode-hook #'eldoc-mode)
 
 ;;; nXML mode
 (defun nxml-mode-hook-definition ()
@@ -332,6 +332,9 @@
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(nxml-slash-auto-complete-flag t)
+ '(package-selected-packages
+   (quote
+    (company yafolding json-mode darkroom racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
@@ -344,3 +347,5 @@
  )
 
 ;; }}}
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
