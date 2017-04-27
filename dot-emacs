@@ -32,6 +32,8 @@
 (setq package-selected-packages
       '(racer
         cargo
+        company
+        company-racer
         flycheck-rust
         flymake-rust
         rust-mode
@@ -223,17 +225,24 @@
   ;; (auto-complete-mode 1)
   (rust-enable-format-on-save)
   (racer-mode)
-  (company-mode)
+  ;; (company-mode)
   (if (not (string-match "cargo" compile-command))
       (set (make-local-variable 'compile-command)
            "cargo build -v"))
   (local-set-key (kbd "C-c C-c") 'compile)
-  (local-set-key (kbd "M-RET") 'rust-run-buffer)
-  (local-set-key (kbd "TAB") #'company-indent-or-complete-common)
-  (setq company-tooltip-align-annotations t))
+  (local-set-key (kbd "M-RET") 'rust-run-buffer))
+(defun racer-mode-hook-definition()
+  (setq racer-rust-src-path (getenv "RUST_SRC_PATH"))
+  (eldoc-mode)
+  (company-mode)
+  (setq company-tooltip-align-annotations t)
+  (local-set-key (kbd "TAB") #'company-indent-or-complete-common))
 (add-hook 'rust-mode-hook 'rust-mode-hook-definition)
 (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)
-(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook 'racer-mode-hook-definition)
+(require 'company-racer)
+  (with-eval-after-load 'company
+    (add-to-list 'company-backends 'company-racer))
 
 ;;; nXML mode
 (defun nxml-mode-hook-definition ()
@@ -334,7 +343,7 @@
  '(nxml-slash-auto-complete-flag t)
  '(package-selected-packages
    (quote
-    (company yafolding json-mode darkroom racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-python ac-octave ac-math ac-c-headers)))
+    (company-php flymake-php php-eldoc php-mode flymake-yaml yaml-mode yaml-tomato company-racer company yafolding json-mode darkroom racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-python ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
