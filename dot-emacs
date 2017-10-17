@@ -13,8 +13,6 @@
 
 ;; package manager initialization
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ;; ("melpa" . "http://melpa.milkbox.net/packages/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")))
 
@@ -35,10 +33,13 @@
         company
         company-racer
         autopair
+        editorconfig
+        fill-column-indicator
         flycheck-rust
         flymake-rust
         rust-mode
         rustfmt
+        thrift
         go-playground
         go-guru
         go-autocomplete
@@ -111,6 +112,9 @@
  ac-auto-show-menu 0.3
  ac-delay 0.05)
 
+;; editorconfig
+(require 'editorconfig)
+(editorconfig-mode 1)
 ;; }}}
 
 ;;;; Major mode hooks & configuration:
@@ -181,8 +185,8 @@
     (local-set-key (kbd "C-c C-c") 'nasm-compile)))
 
 ;;; AUCTeX mode
-;; (load "auctex.el" nil t t)
-;; (load "preview-latex.el" nil t t)
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
@@ -305,10 +309,6 @@
         (insert-file-contents "~/.emacs.d/logos/default")
         (buffer-string)))
 
-;; before-save-hook -- delete trailing whitespace automatically
-(add-hook 'before-save-hook (lambda ()
-                              (delete-trailing-whitespace)))
-
 ;; Should use chromium as default browser
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "chromium")
@@ -368,12 +368,12 @@
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(nxml-slash-auto-complete-flag t)
- ;; '(package-selected-packages
- ;;   (quote
- ;;    (company-php flymake-php php-eldoc php-mode flymake-yaml yaml-mode yaml-tomato company-racer company yafolding json-mode darkroom racer cargo flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi ipython haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-python ac-octave ac-math ac-c-headers)))
  '(org-agenda-files
    (quote
-    ("~/org/mroi.software.org" "~/org/mroi.org" "~/org/home.org")))
+    ("~/org/mroi.software.org" "~/org/mroi.org" "~/org/home.org")) t)
+ '(package-selected-packages
+   (quote
+    (editorconfig thrift fill-column-indicator dockerfile-mode racer cargo company company-racer autopair flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-octave ac-math ac-c-headers)))
  '(safe-local-variable-values
    (quote
     ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
