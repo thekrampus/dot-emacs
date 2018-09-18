@@ -210,14 +210,22 @@
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 
 ;;; SQL mode
-(require 'sql-indent)
+(eval-after-load "sql"
+    (load-library "sql-indent"))
+;; (require 'sql-indent)
 (add-hook 'sql-mode-hook '(lambda () (column-enforce-mode 1)))
 
 ;;; Python mode
-(add-hook 'python-mode-hook '(lambda () (column-enforce-mode 1)))
-;; (add-hook 'python-mode-hook '(lambda () (eldoc-mode 1)))
-(add-hook 'python-mode-hook 'jedi:setup)
+(require 'jedi)
+(require 'auto-virtualenvwrapper)
+(defun python-mode-hook-definition ()
+    (column-enforce-mode 1)
+    (auto-virtualenvwrapper-activate)
+    (jedi:setup)
+    (jedi-mode)
+    )
 (setq jedi:complete-on-dot t)
+(add-hook 'python-mode-hook 'python-mode-hook-definition)
 ;; ipython setup
 (setq-default python-shell-interpreter "ipython")
 (setq-default python-shell-interpreter-args "-i")
@@ -323,60 +331,60 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(LaTeX-item-indent 0)
- '(TeX-command-list
-   (quote
-    (("TeX" "%(PDF)%(tex) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (plain-tex-mode texinfo-mode ams-tex-mode)
-      :help "Run plain TeX")
-     ("LaTeX" "%`%l%(mode) -shell-escape%' %t" TeX-run-TeX nil
-      (latex-mode doctex-mode)
-      :help "Run LaTeX")
-     ("Makeinfo" "makeinfo %(extraopts) %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with Info output")
-     ("Makeinfo HTML" "makeinfo %(extraopts) --html %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with HTML output")
-     ("AmSTeX" "%(PDF)amstex %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (ams-tex-mode)
-      :help "Run AMSTeX")
-     ("ConTeXt" "texexec --once --texutil %(extraopts) %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt once")
-     ("ConTeXt Full" "texexec %(extraopts) %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt until completion")
-     ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
-     ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
-     ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
-     ("Print" "%p" TeX-run-command t t :help "Print the file")
-     ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
-     ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
-     ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
-     ("Xindy" "texindy %s" TeX-run-command nil t :help "Run xindy to create index file")
-     ("Check" "lacheck %s" TeX-run-compile nil
-      (latex-mode)
-      :help "Check LaTeX file for correctness")
-     ("ChkTeX" "chktex -v6 %s" TeX-run-compile nil
-      (latex-mode)
-      :help "Check LaTeX file for common mistakes")
-     ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
-     ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
-     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-     ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
+    '(TeX-command-list
+         (quote
+             (("TeX" "%(PDF)%(tex) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+                  (plain-tex-mode texinfo-mode ams-tex-mode)
+                  :help "Run plain TeX")
+                 ("LaTeX" "%`%l%(mode) -shell-escape%' %t" TeX-run-TeX nil
+                     (latex-mode doctex-mode)
+                     :help "Run LaTeX")
+                 ("Makeinfo" "makeinfo %(extraopts) %t" TeX-run-compile nil
+                     (texinfo-mode)
+                     :help "Run Makeinfo with Info output")
+                 ("Makeinfo HTML" "makeinfo %(extraopts) --html %t" TeX-run-compile nil
+                     (texinfo-mode)
+                     :help "Run Makeinfo with HTML output")
+                 ("AmSTeX" "%(PDF)amstex %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+                     (ams-tex-mode)
+                     :help "Run AMSTeX")
+                 ("ConTeXt" "texexec --once --texutil %(extraopts) %(execopts)%t" TeX-run-TeX nil
+                     (context-mode)
+                     :help "Run ConTeXt once")
+                 ("ConTeXt Full" "texexec %(extraopts) %(execopts)%t" TeX-run-TeX nil
+                     (context-mode)
+                     :help "Run ConTeXt until completion")
+                 ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
+                 ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")
+                 ("View" "bash -c \"if pgrep -f '^xpdf.*%s'; then xpdf -remote %s -reload; else xpdf -cont -remote %s %s.pdf; fi\"" TeX-run-discard-or-function t t :help "Run Viewer")
+                 ("Print" "%p" TeX-run-command t t :help "Print the file")
+                 ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
+                 ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
+                 ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
+                 ("Xindy" "texindy %s" TeX-run-command nil t :help "Run xindy to create index file")
+                 ("Check" "lacheck %s" TeX-run-compile nil
+                     (latex-mode)
+                     :help "Check LaTeX file for correctness")
+                 ("ChkTeX" "chktex -v6 %s" TeX-run-compile nil
+                     (latex-mode)
+                     :help "Check LaTeX file for common mistakes")
+                 ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
+                 ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
+                 ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
+                 ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
  '(gud-gdb-command-name "gdb --annotate=1")
  '(haskell-mode-hook (quote (turn-on-haskell-indentation)))
  '(large-file-warning-threshold nil)
  '(nxml-slash-auto-complete-flag t)
- '(org-agenda-files
-   (quote
-    ("~/org/mroi.software.org" "~/org/mroi.org" "~/org/home.org")) t)
- '(package-selected-packages
-   (quote
-    (editorconfig thrift fill-column-indicator dockerfile-mode racer cargo company company-racer autopair flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-octave ac-math ac-c-headers)))
- '(safe-local-variable-values
-   (quote
-    ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
+    '(org-agenda-files
+         (quote
+             ("~/org/mroi.software.org" "~/org/mroi.org" "~/org/home.org")) t)
+    '(package-selected-packages
+         (quote
+             (auto-virtualenvwrapper virtualenvwrapper editorconfig thrift fill-column-indicator dockerfile-mode racer cargo company company-racer autopair flycheck-rust flymake-rust rust-mode rustfmt go-playground go-guru go-autocomplete go-direx go-mode slime pythonic popup-complete matlab-mode lua-mode jedi haskell-mode form-feed fish-mode eldoc-extension eldoc-eval column-enforce-mode c-eldoc auto-complete-auctex ac-racer ac-octave ac-math ac-c-headers)))
+    '(safe-local-variable-values
+         (quote
+             ((whitespace-style face tabs spaces trailing lines space-before-tab::space newline indentation::space empty space-after-tab::space space-mark tab-mark newline-mark)))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
