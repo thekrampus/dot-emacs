@@ -185,12 +185,14 @@
     (local-set-key (kbd "C-c C-c") 'nasm-compile)))
 
 ;;; AUCTeX mode
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
+(if (file-exists-p "auctex.el")
+    ((load "auctex.el" nil t t)
+     (setq TeX-auto-save t)
+     (setq TeX-parse-self t)
+     (setq TeX-save-query nil)
+     (setq TeX-PDF-mode t)))
+(if (file-exists-p "preview-latex.el")
+    ((load "preview-latex.el" nil t t)))
 
 ;; LaTeX hooks (not AUCTeX specific)
 (defun turn-on-outline-minor-mode ()
